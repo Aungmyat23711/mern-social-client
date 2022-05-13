@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Container, AppBar, Typography, Grow, Grid } from '@material-ui/core';
-import Posts from './components/Posts/Posts';
-import Form from './components/Form/Form';
+import { Container, Grow, Grid } from '@material-ui/core';
 import useStyles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPosts } from './actions/posts';
+import Navbar from './components/Navbar/Navbar';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './components/Home/Home';
+import Auth from './components/Auth/Auth';
 const App = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -13,37 +15,18 @@ const App = () => {
     dispatch(getPosts());
   }, [dispatch]);
   return (
-    <Container maxidth='lg' className={classes.heading}>
-      <AppBar position='static' color='inherit' className={classes.appBar}>
-        <Typography variant='h2' align='center'>
-          Memories
-        </Typography>
-        <img
-          src={require('./images/avatar2.png')}
-          alt='memories'
-          height={60}
-          width={60}
-        />
-      </AppBar>
-      <Grow in>
-        <Container>
-          <Grid
-            container
-            justifyContent='space-between'
-            alignItems='stretch'
-            spacing={4}
-            className={classes.mainContainer}
-          >
-            <Grid item xs={12} sm={7}>
-              <Posts setCurrentId={setCurrentId} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Form currentId={currentId} setCurrentId={setCurrentId} />
-            </Grid>
-          </Grid>
-        </Container>
-      </Grow>
-    </Container>
+    <Router>
+      <Container maxidth='lg' className={classes.heading}>
+        <Navbar />
+        <Routes>
+          <Route
+            path='/'
+            element={<Home currentId={currentId} setCurrentId={setCurrentId} />}
+          />
+          <Route path='/auth' element={<Auth />} />
+        </Routes>
+      </Container>
+    </Router>
   );
 };
 export default App;
